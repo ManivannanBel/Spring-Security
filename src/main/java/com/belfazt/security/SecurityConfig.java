@@ -1,7 +1,9 @@
 package com.belfazt.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,14 +11,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.belfazt.service.CustomUserDetailService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
+	@Autowired
+	CustomUserDetailService useDetailService;
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
-		
+		//DB AUTH
+		auth.authenticationProvider(authenticationProvider());
 		
 		/*//IN MEMORY AUTH
 		auth
@@ -47,7 +55,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/api/data2").hasAuthority("ACCESS_API_DATA_2")
 			.antMatchers("/api/users").hasRole("ADMIN")
 			.and()
-			.httpBasic();
+			.formLogin()	//--> in-built login form
+			.loginPage("/login").permitAll();	//Set the custom login page
+	}
+	
+	@Bean 
+	DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+		authenticationProvider.setPasswordEncoder(passwordEncoder());
+		authenticationProvider.setUserDetailsService(useDetailService);
+		
+		return authenticationProvider;
 	}
 	
 	@Bean
