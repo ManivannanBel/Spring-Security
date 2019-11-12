@@ -15,6 +15,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		
+		
+		
+		/*//IN MEMORY AUTH
 		auth
 			.inMemoryAuthentication()
 			.withUser("admin").password(passwordEncoder().encode("admin123")).roles("ADMIN").authorities("ACCESS_API_DATA_1", "ACCESS_API_DATA_2")
@@ -22,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.withUser("mani").password(passwordEncoder().encode("mani123")).roles("USER")
 			.and()
 			.withUser("maxi").password(passwordEncoder().encode("maxi123")).roles("MANAGER").authorities("ACCESS_API_DATA_1");
+		*/
 	}
 
 	@Override
@@ -40,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			//Protecting rest endpoints
 			.antMatchers("/api/data1").hasAuthority("ACCESS_API_DATA_1")
 			.antMatchers("/api/data2").hasAuthority("ACCESS_API_DATA_2")
+			.antMatchers("/api/users").hasRole("ADMIN")
 			.and()
 			.httpBasic();
 	}
