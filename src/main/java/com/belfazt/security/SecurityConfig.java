@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.belfazt.service.CustomUserDetailService;
 
@@ -56,7 +57,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/api/users").hasRole("ADMIN")
 			.and()
 			.formLogin()	//--> in-built login form
-			.loginPage("/login").permitAll();	//Set the custom login page
+			.loginPage("/login").permitAll()	//Set the custom login page
+			.and()
+			 //Logout code
+			.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
+			.and()
+			 //Rememberme  //Remembers only for 30 days
+			.rememberMe().tokenValiditySeconds(2592000);
 	}
 	
 	@Bean 
