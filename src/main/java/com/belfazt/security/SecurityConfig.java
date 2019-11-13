@@ -54,7 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			//Protecting rest endpoints
 			.antMatchers("/api/data1").hasAuthority("ACCESS_API_DATA_1")
 			.antMatchers("/api/data2").hasAuthority("ACCESS_API_DATA_2")
-			.antMatchers("/api/users").hasRole("ADMIN")
+			.antMatchers("/api/admin/users").hasRole("ADMIN")
+			.antMatchers("/api/management/report").hasRole("MANAGER")
 			.and()
 			.formLogin()	//--> in-built login form
 			.loginPage("/login").permitAll()	//Set the custom login page
